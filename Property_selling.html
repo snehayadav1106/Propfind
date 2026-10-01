@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PropFind — Plots, Flats & Homes in Vadodara</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--purple:#9D4EDD;--pl:#E0AAFF;--dark:#0F0817;--dark2:#1A0F2B;--deep:#3C096C;--cream:#F8F6FC;--cream2:#E9E1F5;--text:#1F1530;--muted:#6E6480;--white:#fff;--r:12px}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;color:var(--text);background:var(--cream)}
+button{font-family:inherit;cursor:pointer}
+section{padding:80px 24px}
+.container{max-width:1100px;margin:0 auto}
+.label{font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-bottom:12px}
+.title{font-family:'Playfair Display',serif;font-size:clamp(28px,4vw,42px);font-weight:700;line-height:1.2;margin-bottom:14px}
+.sub{font-size:16px;color:var(--muted);line-height:1.7;max-width:540px}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:68px;background:rgba(15,8,23,.95);backdrop-filter:blur(12px);border-bottom:1px solid rgba(157,78,221,.2)}
+.logo{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--purple)}
+.logo span{color:#fff}
+.nav-links{display:flex;gap:32px;list-style:none}
+.nav-links a{color:rgba(255,255,255,.7);text-decoration:none;font-size:14px;font-weight:500}
+.nav-links a:hover{color:var(--purple)}
+.nav-cta{background:var(--purple);color:var(--dark);border:0;padding:10px 22px;border-radius:8px;font-size:14px;font-weight:600}
+.menu-btn{display:none;background:none;border:0;color:#fff;font-size:24px}
+.mobile-menu{display:none;position:fixed;top:68px;left:0;right:0;background:rgba(15,8,23,.98);padding:20px 24px;z-index:99}
+.mobile-menu.open{display:block}
+.mobile-menu a{display:block;color:rgba(255,255,255,.8);text-decoration:none;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+
+/* HERO */
+.hero{min-height:100vh;background:linear-gradient(135deg,var(--dark),var(--dark2) 50%,var(--deep));display:flex;align-items:center;justify-content:center;text-align:center;padding:100px 24px 60px}
+.hero-content{max-width:780px}
+.eyebrow{display:inline-block;background:rgba(157,78,221,.15);border:1px solid rgba(157,78,221,.35);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:6px 18px;border-radius:100px;margin-bottom:24px}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(38px,6vw,72px);color:#fff;line-height:1.1;margin-bottom:20px}
+.hero h1 em{color:var(--purple);font-style:normal}
+.hero p{font-size:17px;color:rgba(255,255,255,.65);line-height:1.7;max-width:540px;margin:0 auto 36px}
+.btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn{padding:14px 30px;border-radius:10px;font-size:15px;font-weight:600;text-decoration:none;display:inline-block;border:0}
+.btn-p{background:var(--purple);color:var(--dark)}
+.btn-o{color:#fff;border:1px solid rgba(255,255,255,.3)}
+.btn-o:hover{border-color:var(--purple);color:var(--purple)}
+.stats{display:flex;gap:40px;justify-content:center;margin-top:56px;flex-wrap:wrap}
+.stat b{display:block;font-family:'Playfair Display',serif;font-size:36px;color:var(--purple)}
+.stat span{font-size:12px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.1em}
+
+/* SEARCH */
+.search-wrap{display:flex;justify-content:center}
+.search{margin-top:-30px;position:relative;z-index:10;background:#fff;border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,.12);padding:28px 32px;max-width:860px;width:calc(100% - 48px)}
+.search h3{font-size:14px;font-weight:600;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:18px}
+.search-row{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px;align-items:end}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em}
+.field select{width:100%;padding:12px 14px;border:1.5px solid var(--cream2);border-radius:8px;font-size:14px;background:var(--cream);outline:0;font-family:inherit}
+.field select:focus{border-color:var(--purple)}
+.search-btn{background:var(--dark);color:#fff;border:0;padding:12px 28px;border-radius:8px;font-size:15px;font-weight:600}
+.search-btn:hover{background:var(--deep)}
+
+/* TYPES */
+.types-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:18px;margin-top:48px}
+.type-card{background:#fff;border-radius:var(--r);padding:28px 22px;border:1.5px solid var(--cream2);cursor:pointer;transition:.2s}
+.type-card:hover{border-color:var(--purple);transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,.08)}
+.type-icon{font-size:32px;margin-bottom:14px}
+.type-card h3{font-family:'Playfair Display',serif;font-size:19px;margin-bottom:8px}
+.type-card p{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px}
+.type-card small{font-size:12px;font-weight:600;color:var(--purple)}
+
+/* LISTINGS */
+.listings{background:var(--dark)}
+.listings .title{color:#fff}.listings .sub{color:rgba(255,255,255,.55)}.listings .label{color:var(--pl)}
+.filter-bar{display:flex;gap:10px;flex-wrap:wrap;margin-top:32px;align-items:center}
+.chip{background:rgba(255,255,255,.06);color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.12);padding:8px 16px;border-radius:100px;font-size:13px;font-weight:500}
+.chip.on,.chip:hover{background:var(--purple);color:var(--dark);border-color:var(--purple)}
+.count{margin-left:auto;font-size:13px;color:rgba(255,255,255,.5)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:28px}
+.card{background:var(--dark2);border-radius:var(--r);border:1px solid rgba(255,255,255,.08);overflow:hidden;transition:.2s}
+.card:hover{border-color:rgba(157,78,221,.4);transform:translateY(-3px)}
+.photo{position:relative;height:200px;background:linear-gradient(135deg,#1f1030,#3a1860);cursor:zoom-in;overflow:hidden}
+.photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.card:hover .photo img{transform:scale(1.06)}
+.tag{position:absolute;top:12px;left:12px;z-index:2;background:var(--purple);color:var(--dark);font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;text-transform:uppercase;letter-spacing:.06em}
+.count-badge{position:absolute;bottom:12px;right:12px;z-index:2;background:rgba(15,8,23,.8);color:#fff;font-size:12px;padding:4px 10px;border-radius:6px}
+.body{padding:20px}
+.price{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--purple);margin-bottom:6px}
+.card h4{font-size:15px;font-weight:600;color:#fff;margin-bottom:4px}
+.loc{font-size:13px;color:rgba(255,255,255,.45);margin-bottom:14px}
+.meta{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:rgba(255,255,255,.6)}
+.enq{display:block;margin-top:16px;width:100%;background:rgba(157,78,221,.12);color:var(--purple);border:1px solid rgba(157,78,221,.3);padding:10px;border-radius:8px;font-size:13px;font-weight:600}
+.enq:hover{background:rgba(157,78,221,.22)}
+.empty{display:none;text-align:center;color:rgba(255,255,255,.6);padding:60px 20px}
+.empty button{margin-top:14px;background:var(--purple);border:0;padding:10px 22px;border-radius:8px;font-weight:600}
+
+/* LIGHTBOX */
+.lb{display:none;position:fixed;inset:0;z-index:200;background:rgba(10,5,18,.95);align-items:center;justify-content:center;flex-direction:column;padding:20px}
+.lb.open{display:flex}
+.lb img{max-width:92vw;max-height:76vh;border-radius:10px;object-fit:contain}
+.lb-cap{color:#fff;margin-top:14px;font-size:14px;text-align:center}
+.lb-btn{position:absolute;background:rgba(255,255,255,.12);color:#fff;border:0;width:46px;height:46px;border-radius:50%;font-size:22px}
+.lb-btn:hover{background:var(--purple);color:var(--dark)}
+.lb-x{top:20px;right:20px}.lb-prev{left:20px;top:50%}.lb-next{right:20px;top:50%}
+.lb-thumbs{display:flex;gap:8px;margin-top:12px}
+.lb-thumbs img{width:60px;height:44px;object-fit:cover;border-radius:6px;opacity:.5;cursor:pointer;border:2px solid transparent}
+.lb-thumbs img.on{opacity:1;border-color:var(--purple)}
+
+/* WHY / AREAS */
+.why{background:var(--cream2)}
+.why-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:48px}
+.why-card{text-align:center;padding:28px 20px}
+.why-icon{width:56px;height:56px;background:var(--dark);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 16px}
+.why-card h4{font-size:16px;margin-bottom:8px}
+.why-card p{font-size:14px;color:var(--muted);line-height:1.6}
+.loc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:48px}
+.loc-card{background:#fff;border:1.5px solid var(--cream2);border-radius:var(--r);padding:24px 20px;text-align:center;cursor:pointer;transition:.2s}
+.loc-card:hover{border-color:var(--purple);transform:translateY(-3px)}
+.loc-card span{font-size:28px}
+.loc-card h4{margin:10px 0 4px}
+.loc-card p{font-size:12px;color:var(--muted)}
+
+/* CONTACT */
+.contact{background:var(--dark2)}
+.contact .title{color:#fff}.contact .sub{color:rgba(255,255,255,.55)}.contact .label{color:var(--pl)}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:48px;align-items:start}
+.ci{display:flex;gap:16px;margin-bottom:28px}
+.ci-icon{width:44px;height:44px;background:rgba(157,78,221,.12);border:1px solid rgba(157,78,221,.25);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.ci h4{font-size:13px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+.ci p{font-size:16px;color:#fff;font-weight:500}
+.ci a{color:var(--purple);text-decoration:none}
+.wa{display:flex;align-items:center;gap:10px;background:#25D366;color:#fff;padding:14px 24px;border-radius:10px;text-decoration:none;font-weight:600;width:fit-content}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fg{margin-bottom:16px}
+.fg label{display:block;font-size:12px;font-weight:600;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.fg input,.fg select,.fg textarea{width:100%;padding:13px 16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#fff;font-size:14px;outline:0;font-family:inherit}
+.fg input::placeholder,.fg textarea::placeholder{color:rgba(255,255,255,.3)}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--purple)}
+.fg select option{background:var(--dark2)}
+.fg textarea{resize:vertical;min-height:100px}
+.submit{width:100%;background:var(--purple);color:var(--dark);border:0;padding:15px;border-radius:10px;font-size:15px;font-weight:700}
+.ok{display:none;background:rgba(46,74,43,.3);border:1px solid rgba(100,200,80,.3);border-radius:10px;padding:16px;text-align:center;color:#90ee90;margin-top:14px;font-size:14px}
+footer{background:var(--dark);padding:32px 40px;text-align:center}
+footer .logo{margin-bottom:10px}
+footer p{font-size:13px;color:rgba(255,255,255,.35)}
+
+@media(max-width:900px){
+nav{padding:0 20px}.nav-links,.nav-cta{display:none}.menu-btn{display:block}
+.types-grid{grid-template-columns:repeat(3,1fr)}.grid{grid-template-columns:1fr 1fr}
+.why-grid,.loc-grid{grid-template-columns:1fr 1fr}.contact-grid{grid-template-columns:1fr}
+.search-row{grid-template-columns:1fr 1fr}.search-btn{grid-column:span 2}}
+@media(max-width:600px){
+.types-grid,.grid,.why-grid,.loc-grid,.search-row,.form-row{grid-template-columns:1fr}
+.search-btn{grid-column:span 1}section{padding:56px 20px}.search{padding:20px}
+.lb-prev{left:8px}.lb-next{right:8px}.count{margin-left:0;width:100%}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Prop<span>Find</span></div>
+  <ul class="nav-links">
+    <li><a href="#properties">Properties</a></li>
+    <li><a href="#listings">Listings</a></li>
+    <li><a href="#locations">Areas</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="nav-cta" onclick="go('contact')">Get Free Advice</button>
+  <button class="menu-btn" onclick="menu.classList.toggle('open')" aria-label="Menu">☰</button>
+</nav>
+<div class="mobile-menu" id="menu" onclick="menu.classList.remove('open')">
+  <a href="#properties">Properties</a><a href="#listings">Listings</a><a href="#locations">Areas</a><a href="#contact">Contact</a>
+</div>
+
+<header class="hero">
+  <div class="hero-content">
+    <div class="eyebrow">Trusted Real Estate Broker — Vadodara</div>
+    <h1>Find Your <em>Dream</em><br>Property in Vadodara</h1>
+    <p>Plots, flats, and homes across every corner of Vadodara. Direct broker deals — no middlemen, no hidden charges.</p>
+    <div class="btns">
+      <a href="#listings" class="btn btn-p">View Properties</a>
+      <a href="#contact" class="btn btn-o">Talk to Broker</a>
+    </div>
+    <div class="stats">
+      <div class="stat"><b>120+</b><span>Properties Listed</span></div>
+      <div class="stat"><b>8+</b><span>Areas in Vadodara</span></div>
+      <div class="stat"><b>500+</b><span>Happy Families</span></div>
+      <div class="stat"><b>12yr</b><span>Experience</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="search-wrap">
+  <div class="search">
+    <h3>Search Properties</h3>
+    <div class="search-row">
+      <div class="field"><label>Property Type</label>
+        <select id="s-type"><option value="">All Types</option><option>Rental</option><option>Semi Furnished</option><option>Newly Furnished</option><option>Reselling</option><option>New Property</option></select></div>
+      <div class="field"><label>Area</label>
+        <select id="s-loc"><option value="">All Areas</option></select></div>
+      <div class="field"><label>Budget</label>
+        <select id="s-budget"><option value="">Any Budget</option><option value="u20">Under ₹20 Lakh</option><option value="20-50">₹20L – ₹50L</option><option value="50-100">₹50L – ₹1 Cr</option><option value="o100">Above ₹1 Cr</option></select></div>
+      <button class="search-btn" onclick="applyFilters(true)">Search →</button>
+    </div>
+  </div>
+</div>
+
+<section id="properties">
+  <div class="container">
+    <div class="label">What We Offer</div>
+    <div class="title">Every Type of<br>Property You Need</div>
+    <p class="sub">Whether you want to rent, move into a furnished home, or invest — we cover every option, all across Vadodara.</p>
+    <div class="types-grid" id="types"></div>
+  </div>
+</section>
+
+<section class="listings" id="listings">
+  <div class="container">
+    <div class="label">Featured Listings</div>
+    <div class="title">Hand-Picked Properties in Vadodara</div>
+    <p class="sub">Personally verified by our broker. Click any photo to see the full gallery.</p>
+    <div class="filter-bar" id="chips"></div>
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="empty"><p>No properties match these filters yet.</p><button onclick="resetFilters()">Show all properties</button></div>
+  </div>
+</section>
+
+<section class="why">
+  <div class="container">
+    <div class="label">Why Choose Us</div>
+    <div class="title">Your Trusted Property Partner in Vadodara</div>
+    <div class="why-grid">
+      <div class="why-card"><div class="why-icon">✅</div><h4>Legal Verification</h4><p>Every property is checked for clear title, NA order, and encumbrance certificate before listing.</p></div>
+      <div class="why-card"><div class="why-icon">💬</div><h4>Direct Broker Contact</h4><p>You talk directly with the broker — no call centers, no delays, no middlemen.</p></div>
+      <div class="why-card"><div class="why-icon">🔍</div><h4>Site Visit Support</h4><p>We arrange site visits at your convenience, including weekends and evenings.</p></div>
+      <div class="why-card"><div class="why-icon">📝</div><h4>Complete Paperwork Help</h4><p>From agreement to registration, we guide you through every step of the documentation.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="locations">
+  <div class="container">
+    <div class="label">We Operate In</div>
+    <div class="title">Areas We Cover Across Vadodara</div>
+    <div class="loc-grid" id="areas"></div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="container">
+    <div class="label">Get In Touch</div>
+    <div class="title">Talk to Our Broker Today</div>
+    <p class="sub">Fill the form or contact directly. We respond within 2 hours on all working days.</p>
+    <div class="contact-grid">
+      <div>
+        <div class="ci"><div class="ci-icon">📞</div><div><h4>Call / WhatsApp</h4><p><a href="tel:+919023147312">+91 90231 47312</a></p></div></div>
+        <div class="ci"><div class="ci-icon">✉️</div><div><h4>Email</h4><p><a href="mailto:info@propfind.in">info@propfind.in</a></p></div></div>
+        <div class="ci"><div class="ci-icon">📍</div><div><h4>Office</h4><p style="color:rgba(255,255,255,.75)">31 Chitrakoot Apartment, beside Bapu's Dargah, Gorwa, Vadodara - 390016</p></div></div>
+        <div class="ci"><div class="ci-icon">🕐</div><div><h4>Hours</h4><p style="color:rgba(255,255,255,.75)">Mon–Sat: 9 AM – 7 PM<br>Sunday: 10 AM – 4 PM</p></div></div>
+        <a class="wa" target="_blank" rel="noopener" href="https://wa.me/919023147312?text=Hi%2C%20I%20am%20interested%20in%20your%20properties.%20Please%20share%20details."><span style="font-size:22px">💬</span> Chat on WhatsApp</a>
+      </div>
+      <div>
+        <div class="form-row">
+          <div class="fg"><label>Your Name</label><input type="text" id="f-name" placeholder="Rahul Sharma"></div>
+          <div class="fg"><label>Phone Number</label><input type="tel" id="f-phone" placeholder="+91 98765 43210"></div>
+        </div>
+        <div class="fg"><label>Looking For</label>
+          <select id="f-type"><option value="">Select property type</option><option>Rental</option><option>Semi Furnished</option><option>Newly Furnished</option><option>Reselling</option><option>New Property</option><option>Just Exploring</option></select></div>
+        <div class="form-row">
+          <div class="fg"><label>Preferred Area</label><select id="f-loc"><option value="">Any Area</option></select></div>
+          <div class="fg"><label>Budget Range</label>
+            <select id="f-budget"><option value="">Select Budget</option><option>Under ₹20 Lakh</option><option>₹20L – ₹50L</option><option>₹50L – ₹1 Cr</option><option>Above ₹1 Cr</option></select></div>
+        </div>
+        <div class="fg"><label>Message (Optional)</label><textarea id="f-msg" placeholder="Tell us what you are looking for..."></textarea></div>
+        <button type="button" class="submit" id="submitBtn" onclick="submitForm()">Send Enquiry →</button>
+        <div class="ok" id="ok">✅ Thank you! We will call you within 2 hours.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="logo">Prop<span>Find</span></div>
+  <p>© 2026 PropFind Real Estate. All rights reserved. | Trusted Broker in Vadodara since 2012</p>
+</footer>
+
+<!-- LIGHTBOX -->
+<div class="lb" id="lb" onclick="if(event.target===this)closeLb()">
+  <button class="lb-btn lb-x" onclick="closeLb()" aria-label="Close">✕</button>
+  <button class="lb-btn lb-prev" onclick="stepLb(-1)" aria-label="Previous">‹</button>
+  <img id="lb-img" alt="">
+  <button class="lb-btn lb-next" onclick="stepLb(1)" aria-label="Next">›</button>
+  <div class="lb-cap" id="lb-cap"></div>
+  <div class="lb-thumbs" id="lb-thumbs"></div>
+</div>
+
+<script>
+/* ============================================================
+   1. YOUR LISTINGS — EDIT THIS PART TO ADD REAL PHOTOS
+   - photos: list of image paths (first one is the cover photo)
+   - put your files in an "images" folder next to index.html
+   - lakh: price in lakhs (used only for the budget filter)
+   ============================================================ */
+const LISTINGS = [
+  { type:"Rental", area:"Bhaili", title:"3BHK Fully Furnished Flat", price:"₹18.5 Lakh", lakh:18.5,
+    meta:["1200 sq.ft","NA Plot","Corner Plot"],
+    photos:["3BHK_HALL.jpeg","3BHK_KICHEN.jpeg","3BHK_BEDROOM.jpeg","3BHK_ROOM2.jpeg"] },
+    // Real photos example: photos:["images/sama-plot-1.jpg","images/sama-plot-2.jpg"]
+  { type:"Rental", area:"Gorwa", title:"", price:"₹42 Lakh", lakh:42,
+    meta:["950 sq.ft","2 BHK","4th Floor"],
+    photos:["2BHK_HALL.jpeg","2BHK_HALL2.jpeg","2BHK_KICHEN.jpeg","2BHK_BEDROOM.jpeg"] },
+  { type:"Reselling", area:"Sevasi", title:"3BHK Independent Bungalow", price:"₹75 Lakh", lakh:75,
+    meta:["1800 sq.ft","3 BHK","G+1"],
+    photos:["https://picsum.photos/seed/house3/800/600","https://picsum.photos/seed/house3b/800/600"] },
+  { type:"Rental", area:"Vasna", title:"2BHK Flat for Rent", price:"₹12,000/mo", lakh:0.12,
+    meta:["900 sq.ft","2 BHK","Gated"],
+    photos:["https://picsum.photos/seed/rent4/800/600","https://picsum.photos/seed/rent4b/800/600"] },
+  { type:"Semi Furnished", area:"Manjalpur", title:"3BHK Semi-Furnished Flat", price:"₹65 Lakh", lakh:65,
+    meta:["1100 sq.ft","3 BHK","8th Floor"],
+    photos:["https://picsum.photos/seed/flat5/800/600","https://picsum.photos/seed/flat5b/800/600","https://picsum.photos/seed/flat5c/800/600"] },
+  { type:"New Property", area:"Gotri", title:"2BHK Row House with Garden", price:"₹38 Lakh", lakh:38,
+    meta:["1250 sq.ft","2 BHK","Garden"],
+    photos:["https://picsum.photos/seed/row6/800/600","https://picsum.photos/seed/row6b/800/600"] }
+];
+
+const AREAS = [["Sama","🏘️",17],["Bhaili","🌆",14],["Sevasi","🏙️",16],["Vasna","🌇",13],["Manjalpur","🌉",18],["Alkapuri","🏢",11],["Gotri","🌳",15],["Waghodia Road","🛣️",16]];
+const TYPES = [["Rental","🔑","Flats and homes available for rent across Vadodara — flexible move-in, verified owners.",22],
+  ["Semi Furnished","🛋️","Basic fittings, modular kitchen and wardrobes already in place — just move in and settle.",19],
+  ["Newly Furnished","✨","Fully furnished, brand-new interiors with appliances — completely move-in ready.",15],
+  ["Reselling","🔄","Verified resale plots, flats and homes with clean title and complete paperwork.",31],
+  ["New Property","🏗️","Freshly launched projects and new-construction plots direct from developers.",33]];
+const BUDGETS = {u20:l=>l<20,"20-50":l=>l>=20&&l<50,"50-100":l=>l>=50&&l<100,o100:l=>l>=100};
+
+const $ = id => document.getElementById(id);
+const go = id => $(id).scrollIntoView({behavior:'smooth'});
+const esc = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let filters = {type:"", area:"", budget:""};
+
+/* ---------- Build static parts ---------- */
+AREAS.forEach(([a])=>{ ['s-loc','f-loc'].forEach(id=>$(id).insertAdjacentHTML('beforeend',`<option>${a}</option>`)); });
+$('areas').innerHTML = AREAS.map(([a,i,n])=>`<div class="loc-card" onclick="pick('area','${a}')"><span>${i}</span><h4>${a}</h4><p>${n} properties</p></div>`).join('');
+$('types').innerHTML = TYPES.map(([t,i,d,n])=>`<div class="type-card" onclick="pick('type','${t}')"><div class="type-icon">${i}</div><h3>${t}</h3><p>${d}</p><small>${n} available</small></div>`).join('');
+$('chips').innerHTML = ['All',...TYPES.map(t=>t[0])].map(t=>`<button class="chip" data-t="${t}" onclick="pick('type','${t==='All'?'':t}')">${t}</button>`).join('') + '<span class="count" id="count"></span>';
+
+/* ---------- Render listing cards ---------- */
+function render(){
+  const list = LISTINGS.map((p,i)=>({...p,i})).filter(p =>
+    (!filters.type || p.type===filters.type) &&
+    (!filters.area || p.area===filters.area) &&
+    (!filters.budget || BUDGETS[filters.budget](p.lakh)));
+  $('grid').innerHTML = list.map(p=>`
+    <div class="card">
+      <div class="photo" onclick="openLb(${p.i},0)">
+        <div class="tag">${esc(p.type)}</div>
+        <img src="${esc(p.photos[0])}" alt="${esc(p.title)} in ${esc(p.area)}" loading="lazy" onerror="this.style.display='none'">
+        ${p.photos.length>1?`<div class="count-badge">📷 ${p.photos.length}</div>`:''}
+      </div>
+      <div class="body">
+        <div class="price">${esc(p.price)}</div>
+        <h4>${esc(p.title)}</h4>
+        <div class="loc">📍 ${esc(p.area)}, Vadodara</div>
+        <div class="meta">${p.meta.map(m=>`<span>${esc(m)}</span>`).join('')}</div>
+        <button class="enq" onclick="openContact(${p.i})">Enquire Now →</button>
+      </div>
+    </div>`).join('');
+  $('empty').style.display = list.length ? 'none' : 'block';
+  $('count').textContent = `${list.length} ${list.length===1?'property':'properties'}`;
+  document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on', c.dataset.t===(filters.type||'All')));
+}
+
+/* ---------- Filters ---------- */
+function pick(key,val){
+  filters[key]=val;
+  if(key==='type') $('s-type').value=val;
+  if(key==='area') $('s-loc').value=val;
+  render(); go('listings');
+}
+function applyFilters(scroll){
+  filters={type:$('s-type').value, area:$('s-loc').value, budget:$('s-budget').value};
+  render(); if(scroll) go('listings');
+}
+function resetFilters(){
+  filters={type:"",area:"",budget:""};
+  ['s-type','s-loc','s-budget'].forEach(id=>$(id).value="");
+  render();
+}
+
+/* ---------- Lightbox ---------- */
+let lbList=[], lbIdx=0, lbTitle="";
+function openLb(i,n){
+  lbList=LISTINGS[i].photos; lbTitle=`${LISTINGS[i].title} — ${LISTINGS[i].area}`; lbIdx=n;
+  $('lb-thumbs').innerHTML = lbList.length>1 ? lbList.map((s,k)=>`<img src="${esc(s)}" onclick="showLb(${k})" alt="">`).join('') : '';
+  $('lb').classList.add('open'); document.body.style.overflow='hidden'; showLb(n);
+}
+function showLb(n){
+  lbIdx=(n+lbList.length)%lbList.length;
+  $('lb-img').src=lbList[lbIdx];
+  $('lb-cap').textContent=`${lbTitle}  (${lbIdx+1}/${lbList.length})`;
+  [...$('lb-thumbs').children].forEach((t,k)=>t.classList.toggle('on',k===lbIdx));
+  document.querySelectorAll('.lb-prev,.lb-next').forEach(b=>b.style.display=lbList.length>1?'block':'none');
+}
+const stepLb = d => showLb(lbIdx+d);
+function closeLb(){ $('lb').classList.remove('open'); document.body.style.overflow=''; }
+document.addEventListener('keydown',e=>{
+  if(!$('lb').classList.contains('open')) return;
+  if(e.key==='Escape') closeLb();
+  if(e.key==='ArrowLeft') stepLb(-1);
+  if(e.key==='ArrowRight') stepLb(1);
+});
+let sx=0;
+$('lb').addEventListener('touchstart',e=>sx=e.touches[0].clientX,{passive:true});
+$('lb').addEventListener('touchend',e=>{const d=e.changedTouches[0].clientX-sx; if(Math.abs(d)>50) stepLb(d<0?1:-1);});
+
+/* ---------- Enquire button ---------- */
+function openContact(i){
+  const p=LISTINGS[i];
+  $('f-msg').value=`Hi, I am interested in "${p.title}" in ${p.area}, Vadodara (${p.price}). Please share details.`;
+  $('f-type').value=p.type; $('f-loc').value=p.area;
+  go('contact'); setTimeout(()=>$('f-name').focus(),600);
+}
+
+/* ---------- Contact form -> Google Sheet ---------- */
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbwrOhF2PDlCLkvO-pVMJ7NUuE7rlv273dj2bKE4Ho9u5k0J_Y3-_tCPeH0dsM2QueU/exec';
+async function submitForm(){
+  const v=id=>$(id).value.trim();
+  const name=v('f-name'), phone=v('f-phone');
+  if(!name) return alert('Please enter your name.');
+  if(!phone) return alert('Please enter your phone number.');
+  if(!/^(?:\+91|0)?[6-9]\d{9}$/.test(phone.replace(/\s+/g,''))) return alert('Please enter a valid 10-digit mobile number.');
+  const btn=$('submitBtn'); btn.textContent='Sending...'; btn.disabled=true; btn.style.opacity='.7';
+  try{
+    const res=await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify({name,phone,type:v('f-type'),location:v('f-loc'),budget:v('f-budget'),message:v('f-msg')})});
+    const data=await res.json();
+    if(data.success===true){
+      $('ok').style.display='block';
+      ['f-name','f-phone','f-msg'].forEach(id=>$(id).value='');
+      ['f-type','f-loc','f-budget'].forEach(id=>$(id).selectedIndex=0);
+      setTimeout(()=>$('ok').style.display='none',6000);
+    } else alert('Something went wrong. Please try again.');
+  }catch(err){ console.error(err); alert('Network error. Please try again.'); }
+  btn.textContent='Send Enquiry →'; btn.disabled=false; btn.style.opacity='1';
+}
+
+render();
+</script>
+</body>
+</html>
